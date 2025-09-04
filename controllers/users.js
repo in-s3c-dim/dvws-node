@@ -26,9 +26,9 @@ module.exports = {
       let status = 201;
       res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
         const { username, password } = req.body;
-
+  const uname = sanitize(username);
       
-        User.findOne({username}, function(err,obj) { 
+         User.findOne({ username: uname }, (err, user) => {          
           if (obj != null) {
             if (obj.username) {
               res.writeHead(409, {'Content-Type': 'text/plain'});
