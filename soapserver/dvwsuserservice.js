@@ -45,11 +45,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    var options = {
-        noent: true,
-        dtdload: true
-    }
-    var xmlDoc = libxml.parseXml(req.body, options);
+    // Only use safe settings - do not allow external entity expansion or external DTDs
+    var xmlDoc = libxml.parseXml(req.body);
     var xmlchild = xmlDoc.get('//username');
     var username = xmlchild.text()
     mongoose.connect(connUri, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
