@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sanitize = require("mongo-sanitize");
 
 const connUri = process.env.MONGO_LOCAL_CONN_URL;
 const User = require('../models/users');
@@ -91,11 +92,13 @@ module.exports = {
 
   login: (req, res) => {
     const { username, password } = req.body;
-    //set_cors(req,res);
+    set_cors(req,res);
+    const uname = sanitize(username);
+
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
       let result = {};
       let status = 200;
-        User.findOne({username}, (err, user) => {
+        User.findOne({ username: uname }, (err, user) => {          
           if (!err && user) {
             // We could compare passwords in our model instead of below as well
             bcrypt.compare(password, user.password).then(match => {
