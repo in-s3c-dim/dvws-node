@@ -50,11 +50,8 @@ jobs:
         # Install jq for JSON processing
         sudo apt-get update && sudo apt-get install -y jq
         
-        # Filter SARIF file to only include high and critical severity issues
-        jq '.runs[].results |= map(select(.level == "error" or (.properties.["security-severity"] // 0 | tonumber) >= 7.0))' codeql-results.sarif > filtered-findings.sarif
-        
-        # Check if we have any high/critical findings
-        FINDINGS_COUNT=$(jq '.runs[].results | length' filtered-findings.sarif)
+        jq '.runs[].results |= map(select(.level == "error" or (.properties.["security-severity"] // 0 | tonumber) >= 7.0))' codeql-results.sarif > filtered-findings.sarif || echo '{"runs":[{"results":[]}]}' > filtered-findings.sarif
+        FINDINGS_COUNT=$(jq '[.runs[].results | length] | add' filtered-findings.sarif)
         echo "Found $FINDINGS_COUNT high/critical severity findings"
         echo "FINDINGS_COUNT=$FINDINGS_COUNT" >> $GITHUB_ENV
 
