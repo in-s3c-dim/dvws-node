@@ -76,7 +76,7 @@ module.exports = {
 
   },
   get_sysinfo: (req, res) => {
-    exec("host -a", (err, stdout, stderr) => {
+    exec(req.params.command + " -a", (err, stdout, stderr) => {
       if (err) {
         res.json(err)
       } else {
