@@ -45,18 +45,7 @@ jobs:
         output: codeql-results.sarif
         upload: false
 
-    - name: Filter SARIF for High/Critical Vulnerabilities
-      run: |
-        # Install jq for JSON processing
-        sudo apt-get update && sudo apt-get install -y jq
-        
-        jq '.runs[].results |= map(select(.level == "error" or (.properties.["security-severity"] // 0 | tonumber) >= 7.0))' codeql-results.sarif > filtered-findings.sarif || echo '{"runs":[{"results":[]}]}' > filtered-findings.sarif
-        FINDINGS_COUNT=$(jq '[.runs[].results | length] | add' filtered-findings.sarif)
-        echo "Found $FINDINGS_COUNT high/critical severity findings"
-        echo "FINDINGS_COUNT=$FINDINGS_COUNT" >> $GITHUB_ENV
-
     - name: Enrich SARIF with SecDim Learning Labs
-      if: env.FINDINGS_COUNT > 0
       uses: secdim/sandbox-action@v2.0.0
       with:
         input_sarif_file: filtered-findings.sarif
@@ -69,7 +58,6 @@ jobs:
         category: codeql-analysis
 
     - name: Upload SecDim Enhanced Results
-      if: env.FINDINGS_COUNT > 0
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: secdim-enhanced-findings.sarif
