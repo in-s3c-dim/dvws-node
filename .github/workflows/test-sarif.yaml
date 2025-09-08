@@ -6,7 +6,7 @@ on:
       sarif_file:
         description: "Path to SARIF file under sarif/"
         required: true
-        default: "sarif/results.sarif"
+        default: "sarif/codeql-secdim.sarif"
 
 permissions:
   contents: read
