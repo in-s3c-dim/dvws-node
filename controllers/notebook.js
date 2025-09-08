@@ -25,11 +25,11 @@ const connUri2 = connUri.substr(0, connUri.lastIndexOf("/"));
 
 function set_cors(req, res) {
   if (req.get('origin')) {
-    res.header('Access-Control-Allow-Origin', req.get('origin'))
-    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Origin', 'domain.com')
+    res.header('Access-Control-Allow-Credentials', false)
   } else {
-    res.header('Access-Control-Allow-Origin', null)
-    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Origin', 'domain.com')
+    res.header('Access-Control-Allow-Credentials', false)
   }
   return res;
 };
@@ -38,8 +38,8 @@ function set_cors(req, res) {
 const options = {
   expiresIn: '2d',
   issuer: 'https://github.com/snoopysecurity',
-  algorithms: ["HS256", "none"],
-  ignoreExpiration: true
+  algorithms: ["HS256"],
+  ignoreExpiration: false
 };
 
 
@@ -76,7 +76,7 @@ module.exports = {
 
   },
   get_sysinfo: (req, res) => {
-    exec(req.params.command + " -a", (err, stdout, stderr) => {
+    exec("hostname" + " -a", (err, stdout, stderr) => {
       if (err) {
         res.json(err)
       } else {
@@ -88,7 +88,7 @@ module.exports = {
 
     var uservalue = decodeURI(req.params.release.toString())
     var xpath_result = xpath.evaluate(
-      "//config/*[local-name(.)='release' and //config//release/text()='" + uservalue + "']",            // xpathExpression
+      "//config/*[local-name(.)='release' and //config//release/text()='\" + uservalue + \"']",            // xpathExpression
       doc,                        // contextNode
       null,                       // namespaceResolver
       xpath.XPathResult.ANY_TYPE, // resultType
