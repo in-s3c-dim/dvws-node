@@ -43,7 +43,7 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
-        output: sarif # this is a folder
+        output: sarif-tmp # this is a folder
         upload: false
 
     - name: Ensure SARIF output exists
@@ -60,7 +60,7 @@ jobs:
     - name: Upload SecDim Enhanced Results
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: secdim-enhanced-findings.sarif
+        sarif_file: ./sarif/codeql-secdim.sarif
         category: secdim-learning-labs
 
     - name: Upload SARIF Artifacts
