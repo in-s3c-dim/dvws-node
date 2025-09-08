@@ -42,10 +42,13 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
-        output: codeql-sarif-results # this is a folder
+        output: sarif # this is a folder
         upload: false
 
-    
+    - name: Ensure SARIF output exists
+      run: |
+        echo "Contents of the sarif folder:"
+        ls -R sarif || true
     
     - name: Enrich SARIF with SecDim Learning Labs
       uses: secdim/sandbox-action@v2.0.0
