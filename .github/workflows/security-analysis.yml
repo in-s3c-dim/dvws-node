@@ -68,8 +68,7 @@ jobs:
       with:
         name: sarif-results-${{ matrix.language }}
         path: |
-          codeql-results.sarif
-          filtered-findings.sarif
+          sarif/${{ matrix.language }}.sarif
           secdim-enhanced-findings.sarif
         retention-days: 30
       if: always()
